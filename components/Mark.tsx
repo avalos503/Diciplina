@@ -1,0 +1,12 @@
+export function Mark({ className = "h-8 w-8" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 64 64" className={className} aria-hidden>
+      <rect width="64" height="64" rx="16" fill="#E8C547" />
+      <path
+        d="M18 44V20h14.2c7.4 0 12.2 4.2 12.2 11.1 0 6.8-4.8 11.1-12.2 11.1H26.6v1.8H18zm8.6-8.6h5c3.6 0 5.8-2 5.8-5.3 0-3.3-2.2-5.3-5.8-5.3h-5v10.6z"
+        fill="#070709"
+      />
+      <rect x="42" y="14" width="6" height="6" rx="1.4" fill="#070709" />
+    </svg>
+  );
+}
