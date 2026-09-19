@@ -4,11 +4,19 @@ App web móvil para construir disciplina: **retos diarios**, **hábitos** y **ra
 
 ## Abrir la app
 
-Sitio publicado:
+El sitio queda en:
 
 **https://avalos503.github.io/Diciplina/**
 
-Si el enlace aún no carga, espera un minuto a que GitHub Pages termine de publicar, o córrela en local.
+La primera vez hay que activar GitHub Pages (un clic, solo el dueño del repo):
+
+1. Abre [Settings → Pages](https://github.com/avalos503/Diciplina/settings/pages)
+2. **Source:** Deploy from a branch
+3. **Branch:** `gh-pages` y carpeta `/ (root)`
+4. Save
+5. Espera 1–2 minutos y entra al enlace de arriba
+
+Mientras tanto, córrela en local (abajo).
 
 ## Cómo correrla en local
 
