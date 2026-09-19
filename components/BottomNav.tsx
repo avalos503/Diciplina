@@ -21,7 +21,9 @@ export function BottomNav() {
     >
       <ul className="grid grid-cols-4">
         {ITEMS.map((item) => {
-          const active = pathname === item.href;
+          const current = (pathname ?? "/").replace(/\/$/, "") || "/";
+          const target = item.href.replace(/\/$/, "") || "/";
+          const active = current === target;
           return (
             <li key={item.href}>
               <Link

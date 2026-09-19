@@ -17,19 +17,21 @@ const sans = Manrope({
   weight: ["400", "500", "600", "700", "800"],
 });
 
+const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export const metadata: Metadata = {
   title: "Diciplina",
   description: "Retos diarios, hábitos y racha. Disciplina sin culpa.",
   applicationName: "Diciplina",
-  manifest: "/manifest.json",
+  manifest: `${base}/manifest.json`,
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Diciplina",
   },
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/apple-touch-icon.png" }],
+    icon: [{ url: `${base}/icon.svg`, type: "image/svg+xml" }],
+    apple: [{ url: `${base}/apple-touch-icon.png` }],
   },
 };
 
@@ -45,6 +47,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className={`${display.variable} ${sans.variable}`}>
       <body className="font-sans antialiased">
+        <noscript>
+          <div className="px-6 py-10 text-center text-sm text-paper">
+            Diciplina necesita JavaScript. Actívalo en el navegador para entrar a la app.
+          </div>
+        </noscript>
         <StoreProvider>
           <AppShell>{children}</AppShell>
         </StoreProvider>

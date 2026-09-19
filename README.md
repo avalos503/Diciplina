@@ -2,6 +2,14 @@
 
 App web móvil para construir disciplina: **retos diarios**, **hábitos** y **racha**. Producto original, en español, con estética oscura y bold. Todo vive en el dispositivo (localStorage). No hay cuenta ni pagos.
 
+## Abrir la app
+
+Sitio publicado:
+
+**https://avalos503.github.io/Diciplina/**
+
+Si el enlace aún no carga, espera un minuto a que GitHub Pages termine de publicar, o córrela en local.
+
 ## Cómo correrla en local
 
 Necesitas Node.js 18 o superior.
@@ -17,7 +25,7 @@ Otras órdenes:
 
 ```bash
 npm run build   # producción
-npm start       # sirve el build
+npm start       # sirve el build local
 npm run lint    # eslint
 ```
 

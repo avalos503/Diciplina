@@ -164,6 +164,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    const timer = window.setTimeout(() => setReady(), 1500);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     if (!ready) return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [ready, state]);
