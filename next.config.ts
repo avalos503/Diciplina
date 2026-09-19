@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const repo = "Diciplina";
 const isPages = process.env.GITHUB_PAGES === "1";
+const isStatic = isPages || process.env.STATIC_EXPORT === "1";
 const basePath = isPages ? `/${repo}` : "";
 
 const nextConfig: NextConfig = {
@@ -9,13 +10,12 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
   },
-  ...(isPages
+  ...(isStatic
     ? {
         output: "export" as const,
         images: { unoptimized: true },
         trailingSlash: true,
-        basePath,
-        assetPrefix: basePath,
+        ...(basePath ? { basePath, assetPrefix: basePath } : {}),
       }
     : {}),
 };

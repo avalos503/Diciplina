@@ -2,21 +2,32 @@
 
 App web móvil para construir disciplina: **retos diarios**, **hábitos** y **racha**. Producto original, en español, con estética oscura y bold. Todo vive en el dispositivo (localStorage). No hay cuenta ni pagos.
 
-## Abrir la app
+## Abrir en el teléfono (URL pública)
 
-El sitio queda en:
+**Abre esta URL ahora:**
+
+**https://temporary-zippy-pearl-rj2oo6z.vercel.app**
+
+Es un deploy anónimo en Vercel. Para que no caduque, reclámalo (cuenta gratis de Vercel, 1 minuto):
+
+**https://vercel.com/claim-deployment?code=58cbf91d-05f1-40ca-b4d4-4841b985334f**
+
+O crea un sitio permanente desde este repo (usa la rama de la app, `main` todavía no la tiene):
+
+[Deploy with Vercel](https://vercel.com/new/clone?repository-url=https://github.com/avalos503/Diciplina/tree/cursor/diciplina-web-app-9402&project-name=diciplina)
+
+### GitHub Pages
+
+La app **no** vive en `https://avalos503.github.io/` (eso es la página de usuario y da 404). El enlace de proyecto, cuando Pages esté activo, es:
 
 **https://avalos503.github.io/Diciplina/**
 
-La primera vez hay que activar GitHub Pages (un clic, solo el dueño del repo):
+Para activarlo (dueño del repo):
 
-1. Abre [Settings → Pages](https://github.com/avalos503/Diciplina/settings/pages)
-2. **Source:** Deploy from a branch
-3. **Branch:** `gh-pages` y carpeta `/ (root)`
-4. Save
-5. Espera 1–2 minutos y entra al enlace de arriba
-
-Mientras tanto, córrela en local (abajo).
+1. [Settings → Pages](https://github.com/avalos503/Diciplina/settings/pages)
+2. Source: **Deploy from a branch**
+3. Branch: **`gh-pages`** / **`/ (root)`**
+4. Save y espera 1–2 minutos
 
 ## Cómo correrla en local
 
