@@ -1,15 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { dailyWinThreshold, getChallenge } from "@/lib/challenges";
 import { greeting, lineForDate } from "@/lib/copy";
-import { formatLongDate } from "@/lib/dates";
+import { formatLongDate, mondayWeekday } from "@/lib/dates";
+import { findDayForWeekday, READING_HABIT_NAME, ROUTINES } from "@/lib/routines";
 import { currentStreak, isDayWon } from "@/lib/streak";
 import { useStore } from "@/lib/store";
 import { CategoryChip } from "./CategoryChip";
 import { CheckCircle } from "./CheckCircle";
+import { AffirmationCard, DailyMessageCard } from "./DailyWords";
 
 export function TodayView() {
-  const { state, today, todayRecord, toggleChallenge, toggleHabit } = useStore();
+  const { state, today, todayRecord, todayMindset, toggleChallenge, toggleHabit } = useStore();
   const name = state.profile?.name ?? "";
   const streak = currentStreak(state.days, today);
   const challenges = (todayRecord?.challengeIds ?? [])
@@ -20,6 +23,8 @@ export function TodayView() {
   const needed = dailyWinThreshold(total);
   const won = isDayWon(todayRecord);
   const progress = total ? Math.min(1, done / needed) : 0;
+  const routine = ROUTINES[0];
+  const todayDay = routine ? findDayForWeekday(routine, mondayWeekday(today)) : undefined;
 
   return (
     <div>
@@ -62,6 +67,47 @@ export function TodayView() {
               : `Marca ${needed} de ${total} retos para sumar el día.`}
         </p>
       </section>
+
+      <section className="mt-5 space-y-3">
+        <AffirmationCard />
+        <DailyMessageCard compact />
+      </section>
+
+      {routine && todayDay ? (
+        <section className="mt-5">
+          <Link
+            href={`/rutinas/${routine.id}?tab=mentalidad`}
+            className="pressable block rounded-3xl border border-white/10 bg-ink-50 p-5"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-gold">
+              Rutina de hoy
+            </p>
+            <h2 className="mt-1 font-display text-3xl uppercase leading-none">{todayDay.label}</h2>
+            <p className="mt-2 text-sm text-paper-muted">
+              {todayDay.focus} · {routine.title}
+            </p>
+            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-gold">
+              Mentalidad · Saco · Entreno · Lectura
+            </p>
+          </Link>
+          <Link
+            href={`/rutinas/${routine.id}?tab=lectura`}
+            className="pressable mt-3 flex items-center justify-between rounded-3xl border border-white/10 bg-ink-50 px-5 py-4"
+          >
+            <span>
+              <span className="block text-[11px] font-bold uppercase tracking-[0.18em] text-gold">
+                {READING_HABIT_NAME}
+              </span>
+              <span className="mt-1 block text-sm text-paper-muted">
+                {todayMindset.readingMinutes > 0
+                  ? `Hoy llevas ${todayMindset.readingMinutes} min`
+                  : "Libro, minutos y audio"}
+              </span>
+            </span>
+            <span className="text-sm font-semibold text-gold">Abrir</span>
+          </Link>
+        </section>
+      ) : null}
 
       <section className="mt-8">
         <div className="mb-3 flex items-end justify-between">

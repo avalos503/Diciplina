@@ -10,14 +10,21 @@ import {
 } from "react";
 import { selectDailyChallengeIds, STARTER_HABITS } from "./challenges";
 import { todayKey } from "./dates";
+import { READING_HABIT_NAME } from "./routines";
 import {
+  emptyBook,
+  emptyMindset,
   emptyState,
   STORAGE_KEY,
   type AppState,
+  type AttentionMark,
+  type BookState,
   type CategoryId,
+  type DayMindset,
   type DayRecord,
   type Habit,
   type Profile,
+  type RoutineProgress,
 } from "./types";
 
 type Action =
@@ -29,6 +36,12 @@ type Action =
   | { type: "ADD_HABIT"; habit: Habit }
   | { type: "REMOVE_HABIT"; id: string }
   | { type: "UPDATE_PROFILE"; patch: Partial<Profile> }
+  | { type: "TOGGLE_ROUTINE_EXERCISE"; routineId: string; exerciseId: string }
+  | { type: "TOGGLE_ROUTINE_DAY"; routineId: string; dayId: string }
+  | { type: "PATCH_MINDSET"; date: string; patch: Partial<DayMindset> }
+  | { type: "SET_NONNEGOTIABLE"; value: string }
+  | { type: "PATCH_BOOK"; patch: Partial<BookState> }
+  | { type: "ADD_MARK"; mark: AttentionMark }
   | { type: "RESET" };
 
 function toggleId(list: string[], id: string): string[] {
@@ -51,12 +64,44 @@ function withDay(
   };
 }
 
+function withMindset(state: AppState, date: string, patch: Partial<DayMindset>): AppState {
+  const current = state.mindsetByDate[date] ?? emptyMindset();
+  return {
+    ...state,
+    mindsetByDate: {
+      ...state.mindsetByDate,
+      [date]: { ...current, ...patch },
+    },
+  };
+}
+
+function progressOf(state: AppState, routineId: string): RoutineProgress {
+  return state.routineProgress[routineId] ?? { completedDayIds: [], completedExerciseIds: [] };
+}
+
+function readingHabit(): Habit {
+  return {
+    id: "habit-lectura",
+    name: READING_HABIT_NAME,
+    category: "mentalidad",
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function withReadingHabit(habits: Habit[]): Habit[] {
+  if (habits.some((habit) => habit.name === READING_HABIT_NAME || habit.id === "habit-lectura")) {
+    return habits;
+  }
+  return [...habits, readingHabit()];
+}
+
 function withToday(state: AppState): AppState {
   if (!state.profile) return state;
   const date = todayKey();
-  if (state.days[date]) return state;
+  if (state.days[date]) return { ...state, habits: withReadingHabit(state.habits) };
   return {
     ...state,
+    habits: withReadingHabit(state.habits),
     days: {
       ...state.days,
       [date]: {
@@ -77,7 +122,7 @@ function reducer(state: AppState, action: Action): AppState {
       return withToday({
         ...state,
         profile: action.profile,
-        habits: action.habits,
+        habits: withReadingHabit(action.habits),
       });
     case "ENSURE_DAY":
       if (state.days[action.date]) return state;
@@ -110,6 +155,40 @@ function reducer(state: AppState, action: Action): AppState {
     case "UPDATE_PROFILE":
       if (!state.profile) return state;
       return { ...state, profile: { ...state.profile, ...action.patch } };
+    case "TOGGLE_ROUTINE_EXERCISE": {
+      const current = progressOf(state, action.routineId);
+      return {
+        ...state,
+        routineProgress: {
+          ...state.routineProgress,
+          [action.routineId]: {
+            ...current,
+            completedExerciseIds: toggleId(current.completedExerciseIds, action.exerciseId),
+          },
+        },
+      };
+    }
+    case "TOGGLE_ROUTINE_DAY": {
+      const current = progressOf(state, action.routineId);
+      return {
+        ...state,
+        routineProgress: {
+          ...state.routineProgress,
+          [action.routineId]: {
+            ...current,
+            completedDayIds: toggleId(current.completedDayIds, action.dayId),
+          },
+        },
+      };
+    }
+    case "PATCH_MINDSET":
+      return withMindset(state, action.date, action.patch);
+    case "SET_NONNEGOTIABLE":
+      return { ...state, nonNegotiable: action.value };
+    case "PATCH_BOOK":
+      return { ...state, book: { ...state.book, ...action.patch } };
+    case "ADD_MARK":
+      return { ...state, book: { ...state.book, marks: [action.mark, ...state.book.marks].slice(0, 40) } };
     case "RESET":
       return emptyState();
     default:
@@ -126,6 +205,15 @@ function parseState(raw: string): AppState | null {
       profile: parsed.profile ?? null,
       habits: Array.isArray(parsed.habits) ? parsed.habits : [],
       days: parsed.days ?? {},
+      routineProgress: parsed.routineProgress ?? {},
+      mindsetByDate: Object.fromEntries(
+        Object.entries(parsed.mindsetByDate ?? {}).map(([date, raw]) => [
+          date,
+          { ...emptyMindset(), ...(raw as DayMindset) },
+        ]),
+      ),
+      nonNegotiable: parsed.nonNegotiable ?? "",
+      book: { ...emptyBook(), ...(parsed.book ?? {}), marks: parsed.book?.marks ?? [] },
     };
   } catch {
     return null;
@@ -137,12 +225,19 @@ type StoreValue = {
   state: AppState;
   today: string;
   todayRecord: DayRecord | undefined;
+  todayMindset: DayMindset;
   onboard: (input: { name: string; focusAreas: CategoryId[]; starter: CategoryId[] }) => void;
   toggleChallenge: (id: string) => void;
   toggleHabit: (id: string) => void;
   addHabit: (name: string, category: CategoryId) => void;
   removeHabit: (id: string) => void;
   updateProfile: (patch: Partial<Profile>) => void;
+  toggleRoutineExercise: (routineId: string, exerciseId: string) => void;
+  toggleRoutineDay: (routineId: string, dayId: string) => void;
+  patchMindset: (patch: Partial<DayMindset>) => void;
+  setNonNegotiable: (value: string) => void;
+  patchBook: (patch: Partial<BookState>) => void;
+  addMark: (mark: Omit<AttentionMark, "id" | "at">) => void;
   reset: () => void;
 };
 
@@ -229,6 +324,28 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     (patch: Partial<Profile>) => dispatch({ type: "UPDATE_PROFILE", patch }),
     [],
   );
+  const toggleRoutineExercise = useCallback((routineId: string, exerciseId: string) => {
+    dispatch({ type: "TOGGLE_ROUTINE_EXERCISE", routineId, exerciseId });
+  }, []);
+  const toggleRoutineDay = useCallback((routineId: string, dayId: string) => {
+    dispatch({ type: "TOGGLE_ROUTINE_DAY", routineId, dayId });
+  }, []);
+  const patchMindset = useCallback(
+    (patch: Partial<DayMindset>) => dispatch({ type: "PATCH_MINDSET", date: today, patch }),
+    [today],
+  );
+  const setNonNegotiable = useCallback((value: string) => {
+    dispatch({ type: "SET_NONNEGOTIABLE", value });
+  }, []);
+  const patchBook = useCallback((patch: Partial<BookState>) => {
+    dispatch({ type: "PATCH_BOOK", patch });
+  }, []);
+  const addMark = useCallback((mark: Omit<AttentionMark, "id" | "at">) => {
+    dispatch({
+      type: "ADD_MARK",
+      mark: { ...mark, id: crypto.randomUUID(), at: new Date().toISOString() },
+    });
+  }, []);
   const reset = useCallback(() => {
     window.localStorage.removeItem(STORAGE_KEY);
     dispatch({ type: "RESET" });
@@ -240,12 +357,19 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       state,
       today,
       todayRecord: state.days[today],
+      todayMindset: state.mindsetByDate[today] ?? emptyMindset(),
       onboard,
       toggleChallenge,
       toggleHabit,
       addHabit,
       removeHabit,
       updateProfile,
+      toggleRoutineExercise,
+      toggleRoutineDay,
+      patchMindset,
+      setNonNegotiable,
+      patchBook,
+      addMark,
       reset,
     }),
     [
@@ -258,6 +382,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       addHabit,
       removeHabit,
       updateProfile,
+      toggleRoutineExercise,
+      toggleRoutineDay,
+      patchMindset,
+      setNonNegotiable,
+      patchBook,
+      addMark,
       reset,
     ],
   );

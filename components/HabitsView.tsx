@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { CATEGORY_META } from "@/lib/challenges";
+import { READING_HABIT_NAME, ROUTINES } from "@/lib/routines";
 import { habitStreak } from "@/lib/streak";
 import { useStore } from "@/lib/store";
 import { CATEGORIES, type CategoryId } from "@/lib/types";
@@ -73,14 +75,23 @@ export function HabitsView() {
                       </span>
                     </span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => removeHabit(habit.id)}
-                    className="shrink-0 rounded-full px-2 py-2 text-xs font-semibold text-paper-dim"
-                    aria-label={`Eliminar ${habit.name}`}
-                  >
-                    Quitar
-                  </button>
+                  {habit.id === "habit-lectura" || habit.name === READING_HABIT_NAME ? (
+                    <Link
+                      href={`/rutinas/${ROUTINES[0].id}?tab=lectura`}
+                      className="shrink-0 rounded-full px-2 py-2 text-xs font-semibold text-gold"
+                    >
+                      Libro
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => removeHabit(habit.id)}
+                      className="shrink-0 rounded-full px-2 py-2 text-xs font-semibold text-paper-dim"
+                      aria-label={`Eliminar ${habit.name}`}
+                    >
+                      Quitar
+                    </button>
+                  )}
                 </div>
               </li>
             );

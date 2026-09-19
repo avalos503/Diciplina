@@ -21,7 +21,7 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export const metadata: Metadata = {
   title: "Diciplina",
-  description: "Retos diarios, hábitos y racha. Disciplina sin culpa.",
+  description: "Retos diarios, hábitos, rutinas, mentalidad y lectura. Disciplina sin culpa.",
   applicationName: "Diciplina",
   manifest: `${base}/manifest.json`,
   appleWebApp: {

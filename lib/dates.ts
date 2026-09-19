@@ -77,6 +77,12 @@ export function dayNumber(key: string): number {
   return parseKey(key).getDate();
 }
 
+/** Monday = 1 … Sunday = 7 */
+export function mondayWeekday(key: string): number {
+  const day = parseKey(key).getDay();
+  return day === 0 ? 7 : day;
+}
+
 function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }

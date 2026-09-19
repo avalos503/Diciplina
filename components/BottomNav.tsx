@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const ITEMS = [
   { href: "/", label: "Hoy", icon: SunIcon },
   { href: "/habitos", label: "Hábitos", icon: RepeatIcon },
+  { href: "/rutinas", label: "Rutinas", icon: BoltIcon, prefix: "/rutinas" },
   { href: "/progreso", label: "Progreso", icon: BarsIcon },
   { href: "/perfil", label: "Perfil", icon: UserIcon },
 ] as const;
@@ -15,20 +16,23 @@ export function BottomNav() {
 
   return (
     <nav
-      className="z-30 border-t border-white/10 bg-ink/95 px-2 pt-2 backdrop-blur-xl"
+      className="z-30 border-t border-white/10 bg-ink/95 px-1 pt-2 backdrop-blur-xl"
       style={{ paddingBottom: "calc(0.6rem + env(safe-area-inset-bottom))" }}
       aria-label="Principal"
     >
-      <ul className="grid grid-cols-4">
+      <ul className="grid grid-cols-5">
         {ITEMS.map((item) => {
           const current = (pathname ?? "/").replace(/\/$/, "") || "/";
           const target = item.href.replace(/\/$/, "") || "/";
-          const active = current === target;
+          const active =
+            "prefix" in item && item.prefix
+              ? current === item.prefix || current.startsWith(`${item.prefix}/`)
+              : current === target;
           return (
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold tracking-wide ${
+                className={`flex flex-col items-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-semibold tracking-wide ${
                   active ? "text-gold" : "text-paper-muted"
                 }`}
                 aria-current={active ? "page" : undefined}
@@ -72,6 +76,19 @@ function RepeatIcon({ active }: { active: boolean }) {
         stroke="currentColor"
         strokeWidth={active ? 2.2 : 1.7}
         strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function BoltIcon({ active }: { active: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden>
+      <path
+        d="M13 3 5.5 13.5H12l-1 7.5L18.5 10H12l1-7Z"
+        stroke="currentColor"
+        strokeWidth={active ? 2.2 : 1.7}
         strokeLinejoin="round"
       />
     </svg>
