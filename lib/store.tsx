@@ -154,10 +154,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const today = todayKey();
 
   useEffect(() => {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? parseState(raw) : null;
-    if (parsed) dispatch({ type: "HYDRATE", state: parsed });
-    setReady();
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? parseState(raw) : null;
+      if (parsed) dispatch({ type: "HYDRATE", state: parsed });
+    } finally {
+      setReady();
+    }
   }, []);
 
   useEffect(() => {
