@@ -46,7 +46,7 @@ export function ProfileView() {
             onClick={() => updateProfile({ name: name.trim() })}
             className="pressable rounded-2xl bg-gold px-4 text-sm font-bold uppercase tracking-[0.1em] text-ink"
           >
-            Ok
+            Guardar
           </button>
         </div>
       </section>

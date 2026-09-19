@@ -27,47 +27,40 @@ export function TodayView() {
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-gold">
           {formatLongDate(today)}
         </p>
-        <h1 className="mt-2 font-display text-[2.6rem] uppercase leading-none tracking-wide">
+        <h1 className="mt-1 font-display text-[2.15rem] uppercase leading-none tracking-wide">
           {greeting(name)}
         </h1>
-        <p className="mt-3 max-w-[22rem] text-sm leading-relaxed text-paper-muted">
-          {lineForDate(today)}
-        </p>
+        <p className="mt-2 text-sm leading-relaxed text-paper-muted">{lineForDate(today)}</p>
       </header>
 
-      <section className="mt-7 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-ink-50 to-ink-100 p-5 shadow-card">
-        <div className="flex items-end justify-between gap-4">
+      <section className="mt-5 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-ink-50 to-ink-100 p-5 shadow-card">
+        <div className="flex items-end justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-paper-muted">
               Racha
             </p>
-            <p className="mt-1 font-display text-7xl leading-none text-gold">{streak}</p>
+            <p className="mt-1 font-display text-6xl leading-none text-gold">{streak}</p>
             <p className="mt-1 text-sm text-paper-muted">
               {streak === 1 ? "día seguido" : "días seguidos"}
             </p>
           </div>
-          <div className="max-w-[9.5rem] text-right text-xs leading-relaxed text-paper-muted">
-            {won
-              ? "Día ganado. Eso es disciplina."
-              : streak === 0
-                ? "Hoy es un buen día para empezar."
-                : `Marca ${needed} de ${total} retos para sumar el día.`}
-          </div>
+          <p className="max-w-[10rem] text-right text-xs font-semibold uppercase tracking-[0.12em] text-gold">
+            {done}/{total} del set
+          </p>
         </div>
-        <div className="mt-5">
-          <div className="mb-2 flex items-center justify-between text-xs font-semibold text-paper-muted">
-            <span>Set de hoy</span>
-            <span>
-              {done}/{total}
-            </span>
-          </div>
-          <div className="h-2 overflow-hidden rounded-full bg-white/10">
-            <div
-              className="h-full rounded-full bg-gold transition-all"
-              style={{ width: `${Math.round(progress * 100)}%` }}
-            />
-          </div>
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
+          <div
+            className="h-full rounded-full bg-gold transition-all"
+            style={{ width: `${Math.round(progress * 100)}%` }}
+          />
         </div>
+        <p className="mt-3 text-sm leading-relaxed text-paper-muted">
+          {won
+            ? "Día ganado. Eso es disciplina."
+            : streak === 0
+              ? "Hoy es un buen día para empezar. Completa el umbral y suma la racha."
+              : `Marca ${needed} de ${total} retos para sumar el día.`}
+        </p>
       </section>
 
       <section className="mt-8">

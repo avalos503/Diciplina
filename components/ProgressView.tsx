@@ -1,14 +1,21 @@
 "use client";
 
 import { dailyWinThreshold } from "@/lib/challenges";
-import { formatShortDate, lastNDays, startOfWeek, weekdayShort } from "@/lib/dates";
+import {
+  alignedWeeks,
+  dayNumber,
+  formatShortDate,
+  lastNDays,
+  startOfWeek,
+  WEEKDAYS_MON,
+} from "@/lib/dates";
 import { bestStreak, currentStreak, isDayPartial, isDayWon, wonCount } from "@/lib/streak";
 import { useStore } from "@/lib/store";
 
 export function ProgressView() {
   const { state, today } = useStore();
   const week = lastNDays(today, 7);
-  const month = lastNDays(today, 28);
+  const month = alignedWeeks(today, 4);
   const weekStart = startOfWeek(today);
   const thisWeek = lastNDays(today, 7).filter((key) => key >= weekStart);
   const streak = currentStreak(state.days, today);
@@ -41,27 +48,33 @@ export function ProgressView() {
           <h2 className="font-display text-2xl uppercase">28 días</h2>
           <p className="text-xs text-paper-muted">{weekChallenges} retos en 7 días</p>
         </div>
-        <div className="mt-4 grid grid-cols-7 gap-2">
+        <div className="mt-4 grid grid-cols-7 gap-1.5 text-center">
+          {WEEKDAYS_MON.map((label) => (
+            <p key={label} className="text-[10px] font-bold text-paper-dim">
+              {label}
+            </p>
+          ))}
           {month.map((key) => {
             const day = state.days[key];
             const won = isDayWon(day);
             const partial = isDayPartial(day);
             const isToday = key === today;
+            const future = key > today;
             return (
-              <div key={key} className="text-center">
-                <p className="mb-1 text-[10px] font-semibold text-paper-dim">
-                  {weekdayShort(key)}
-                </p>
-                <div
-                  title={`${formatShortDate(key)}`}
-                  className={`mx-auto h-8 w-8 rounded-lg border ${
-                    won
-                      ? "border-gold bg-gold"
-                      : partial
-                        ? "border-gold/50 bg-gold/25"
-                        : "border-white/10 bg-white/5"
-                  } ${isToday ? "ring-2 ring-paper/70" : ""}`}
-                />
+              <div
+                key={key}
+                title={formatShortDate(key)}
+                className={`grid h-9 place-items-center rounded-lg border text-[11px] font-semibold ${
+                  won
+                    ? "border-gold bg-gold text-ink"
+                    : partial
+                      ? "border-gold/50 bg-gold/20 text-gold"
+                      : future
+                        ? "border-transparent text-paper-dim/50"
+                        : "border-white/10 bg-white/5 text-paper-muted"
+                } ${isToday ? "ring-2 ring-paper/80" : ""}`}
+              >
+                {dayNumber(key)}
               </div>
             );
           })}

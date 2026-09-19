@@ -23,7 +23,7 @@ const MONTHS = [
   "diciembre",
 ];
 
-const WEEKDAYS_SHORT = ["D", "L", "M", "X", "J", "V", "S"];
+export const WEEKDAYS_MON = ["L", "M", "X", "J", "V", "S", "D"];
 
 export function todayKey(date = new Date()): string {
   const y = date.getFullYear();
@@ -55,10 +55,6 @@ export function formatShortDate(key: string): string {
   return `${date.getDate()} ${MONTHS[date.getMonth()].slice(0, 3)}`;
 }
 
-export function weekdayShort(key: string): string {
-  return WEEKDAYS_SHORT[parseKey(key).getDay()];
-}
-
 export function lastNDays(key: string, n: number): string[] {
   return Array.from({ length: n }, (_, i) => shiftKey(key, -(n - 1 - i)));
 }
@@ -69,6 +65,16 @@ export function startOfWeek(key: string): string {
   const mondayOffset = day === 0 ? -6 : 1 - day;
   date.setDate(date.getDate() + mondayOffset);
   return todayKey(date);
+}
+
+export function alignedWeeks(today: string, weeks = 4): string[] {
+  const monday = startOfWeek(today);
+  const start = shiftKey(monday, -7 * (weeks - 1));
+  return lastNDays(shiftKey(start, 7 * weeks - 1), 7 * weeks);
+}
+
+export function dayNumber(key: string): number {
+  return parseKey(key).getDate();
 }
 
 function capitalize(value: string): string {

@@ -32,7 +32,6 @@ export function lineForDate(dateKey: string): string {
 export function greeting(name: string, hour = new Date().getHours()): string {
   const trimmed = name.trim();
   const who = trimmed ? `, ${trimmed}` : "";
-  if (hour < 6) return `Aún es noche${who}`;
   if (hour < 12) return `Buenos días${who}`;
   if (hour < 19) return `Buenas tardes${who}`;
   return `Buenas noches${who}`;
