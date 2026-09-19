@@ -1,17 +1,15 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { BottomNav } from "./BottomNav";
 import { Onboarding } from "./Onboarding";
 import { useStore } from "@/lib/store";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { ready, state } = useStore();
-  const pathname = usePathname();
 
   return (
     <div className="noise min-h-dvh bg-ink">
-      <div className="relative mx-auto min-h-dvh max-w-phone overflow-hidden bg-ink shadow-card">
+      <div className="relative mx-auto flex min-h-dvh max-w-phone flex-col overflow-hidden bg-ink shadow-card">
         <div className="pointer-events-none absolute -left-16 top-[-80px] h-56 w-56 rounded-full bg-gold/10 blur-3xl" />
         <div className="pointer-events-none absolute -right-10 top-40 h-40 w-40 rounded-full bg-ember/10 blur-3xl" />
 
@@ -21,13 +19,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Onboarding />
         ) : (
           <>
-            <main
-              className="relative px-5 pt-[max(1.25rem,env(safe-area-inset-top))]"
-              style={{ paddingBottom: "calc(6.2rem + env(safe-area-inset-bottom))" }}
-            >
+            <main className="relative flex-1 overflow-y-auto px-5 pb-4 pt-[max(1.25rem,env(safe-area-inset-top))]">
               {children}
             </main>
-            {pathname ? <BottomNav /> : null}
+            <BottomNav />
           </>
         )}
       </div>

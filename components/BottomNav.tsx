@@ -15,7 +15,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-30 mx-auto max-w-phone border-t border-white/10 bg-ink/90 px-2 pt-2 backdrop-blur-xl"
+      className="z-30 border-t border-white/10 bg-ink/95 px-2 pt-2 backdrop-blur-xl"
       style={{ paddingBottom: "calc(0.6rem + env(safe-area-inset-bottom))" }}
       aria-label="Principal"
     >
