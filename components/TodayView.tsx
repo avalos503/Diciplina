@@ -4,6 +4,7 @@ import Link from "next/link";
 import { dailyWinThreshold, getChallenge } from "@/lib/challenges";
 import { greeting, lineForDate } from "@/lib/copy";
 import { formatLongDate, mondayWeekday } from "@/lib/dates";
+import { KIND_LABEL, kindForDate, planForDate } from "@/lib/nutrition";
 import { findDayForWeekday, READING_HABIT_NAME, ROUTINES } from "@/lib/routines";
 import { currentStreak, isDayWon } from "@/lib/streak";
 import { useStore } from "@/lib/store";
@@ -89,6 +90,20 @@ export function TodayView() {
             <p className="mt-3 text-xs font-semibold uppercase tracking-[0.12em] text-gold">
               Mentalidad · Saco · Entreno · Lectura
             </p>
+          </Link>
+          <Link
+            href="/nutricion"
+            className="pressable mt-3 flex items-center justify-between rounded-3xl border border-white/10 bg-ink-50 px-5 py-4"
+          >
+            <span>
+              <span className="block text-[11px] font-bold uppercase tracking-[0.18em] text-gold">
+                Nutrición
+              </span>
+              <span className="mt-1 block text-sm text-paper-muted">
+                {KIND_LABEL[kindForDate(today)]} · {planForDate(today).slots.comida[0].name}
+              </span>
+            </span>
+            <span className="text-sm font-semibold text-gold">Menú</span>
           </Link>
           <Link
             href={`/rutinas/${routine.id}?tab=lectura`}

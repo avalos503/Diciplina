@@ -7,6 +7,7 @@ const ITEMS = [
   { href: "/", label: "Hoy", icon: SunIcon },
   { href: "/habitos", label: "Hábitos", icon: RepeatIcon },
   { href: "/rutinas", label: "Rutinas", icon: BoltIcon, prefix: "/rutinas" },
+  { href: "/nutricion", label: "Comida", icon: BowlIcon },
   { href: "/progreso", label: "Progreso", icon: BarsIcon },
   { href: "/perfil", label: "Perfil", icon: UserIcon },
 ] as const;
@@ -20,7 +21,7 @@ export function BottomNav() {
       style={{ paddingBottom: "calc(0.6rem + env(safe-area-inset-bottom))" }}
       aria-label="Principal"
     >
-      <ul className="grid grid-cols-5">
+      <ul className="grid grid-cols-6">
         {ITEMS.map((item) => {
           const current = (pathname ?? "/").replace(/\/$/, "") || "/";
           const target = item.href.replace(/\/$/, "") || "/";
@@ -90,6 +91,25 @@ function BoltIcon({ active }: { active: boolean }) {
         stroke="currentColor"
         strokeWidth={active ? 2.2 : 1.7}
         strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function BowlIcon({ active }: { active: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" aria-hidden>
+      <path
+        d="M4 11h16c0 5-3.2 8-8 8s-8-3-8-8Z"
+        stroke="currentColor"
+        strokeWidth={active ? 2.2 : 1.7}
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7 11V9.5A5 5 0 0 1 17 9.5V11"
+        stroke="currentColor"
+        strokeWidth={active ? 2.2 : 1.7}
+        strokeLinecap="round"
       />
     </svg>
   );

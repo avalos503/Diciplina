@@ -65,6 +65,29 @@ export type BookState = {
   marks: AttentionMark[];
 };
 
+export type MealSlot = "desayuno" | "comida" | "cena" | "snack";
+
+export type DayMeals = {
+  chosen: Partial<Record<MealSlot, string>>;
+  eaten: MealSlot[];
+};
+
+export type WeighIn = {
+  date: string;
+  weightLb: number;
+};
+
+export type NutritionState = {
+  calorieTarget: number;
+  startWeightLb: number;
+  currentWeightLb: number;
+  goalLossLb: number;
+  horizonWeeks: number;
+  planStart: string;
+  weighIns: WeighIn[];
+  mealsByDate: Record<string, DayMeals>;
+};
+
 export type AppState = {
   version: 1;
   profile: Profile | null;
@@ -74,6 +97,7 @@ export type AppState = {
   mindsetByDate: Record<string, DayMindset>;
   nonNegotiable: string;
   book: BookState;
+  nutrition: NutritionState;
 };
 
 export const STORAGE_KEY = "diciplina.v1";
@@ -95,6 +119,22 @@ export const emptyBook = (): BookState => ({
   marks: [],
 });
 
+export const emptyDayMeals = (): DayMeals => ({
+  chosen: {},
+  eaten: [],
+});
+
+export const emptyNutrition = (): NutritionState => ({
+  calorieTarget: 1900,
+  startWeightLb: 0,
+  currentWeightLb: 0,
+  goalLossLb: 20,
+  horizonWeeks: 12,
+  planStart: "",
+  weighIns: [],
+  mealsByDate: {},
+});
+
 export const emptyState = (): AppState => ({
   version: 1,
   profile: null,
@@ -104,4 +144,5 @@ export const emptyState = (): AppState => ({
   mindsetByDate: {},
   nonNegotiable: "",
   book: emptyBook(),
+  nutrition: emptyNutrition(),
 });

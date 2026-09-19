@@ -13,18 +13,24 @@ import { todayKey } from "./dates";
 import { READING_HABIT_NAME } from "./routines";
 import {
   emptyBook,
+  emptyDayMeals,
   emptyMindset,
+  emptyNutrition,
   emptyState,
   STORAGE_KEY,
   type AppState,
   type AttentionMark,
   type BookState,
   type CategoryId,
+  type DayMeals,
   type DayMindset,
   type DayRecord,
   type Habit,
+  type MealSlot,
+  type NutritionState,
   type Profile,
   type RoutineProgress,
+  type WeighIn,
 } from "./types";
 
 type Action =
@@ -42,7 +48,29 @@ type Action =
   | { type: "SET_NONNEGOTIABLE"; value: string }
   | { type: "PATCH_BOOK"; patch: Partial<BookState> }
   | { type: "ADD_MARK"; mark: AttentionMark }
+  | { type: "PATCH_NUTRITION"; patch: Partial<NutritionState> }
+  | { type: "CHOOSE_MEAL"; date: string; slot: MealSlot; optionId: string }
+  | { type: "TOGGLE_MEAL_EATEN"; date: string; slot: MealSlot }
+  | { type: "ADD_WEIGH_IN"; weighIn: WeighIn }
   | { type: "RESET" };
+
+function mealsOf(state: AppState, date: string): DayMeals {
+  return state.nutrition.mealsByDate[date] ?? emptyDayMeals();
+}
+
+function withMeals(state: AppState, date: string, update: (meals: DayMeals) => DayMeals): AppState {
+  const current = mealsOf(state, date);
+  return {
+    ...state,
+    nutrition: {
+      ...state.nutrition,
+      mealsByDate: {
+        ...state.nutrition.mealsByDate,
+        [date]: update(current),
+      },
+    },
+  };
+}
 
 function toggleId(list: string[], id: string): string[] {
   return list.includes(id) ? list.filter((item) => item !== id) : [...list, id];
@@ -189,6 +217,36 @@ function reducer(state: AppState, action: Action): AppState {
       return { ...state, book: { ...state.book, ...action.patch } };
     case "ADD_MARK":
       return { ...state, book: { ...state.book, marks: [action.mark, ...state.book.marks].slice(0, 40) } };
+    case "PATCH_NUTRITION":
+      return { ...state, nutrition: { ...state.nutrition, ...action.patch } };
+    case "CHOOSE_MEAL":
+      return withMeals(state, action.date, (meals) => ({
+        ...meals,
+        chosen: { ...meals.chosen, [action.slot]: action.optionId },
+      }));
+    case "TOGGLE_MEAL_EATEN":
+      return withMeals(state, action.date, (meals) => ({
+        ...meals,
+        eaten: toggleId(meals.eaten, action.slot) as MealSlot[],
+      }));
+    case "ADD_WEIGH_IN": {
+      const weighIns = [
+        action.weighIn,
+        ...state.nutrition.weighIns.filter((item) => item.date !== action.weighIn.date),
+      ]
+        .sort((a, b) => (a.date < b.date ? 1 : -1))
+        .slice(0, 24);
+      return {
+        ...state,
+        nutrition: {
+          ...state.nutrition,
+          weighIns,
+          currentWeightLb: action.weighIn.weightLb,
+          startWeightLb: state.nutrition.startWeightLb || action.weighIn.weightLb,
+          planStart: state.nutrition.planStart || action.weighIn.date,
+        },
+      };
+    }
     case "RESET":
       return emptyState();
     default:
@@ -214,6 +272,12 @@ function parseState(raw: string): AppState | null {
       ),
       nonNegotiable: parsed.nonNegotiable ?? "",
       book: { ...emptyBook(), ...(parsed.book ?? {}), marks: parsed.book?.marks ?? [] },
+      nutrition: {
+        ...emptyNutrition(),
+        ...(parsed.nutrition ?? {}),
+        weighIns: Array.isArray(parsed.nutrition?.weighIns) ? parsed.nutrition.weighIns : [],
+        mealsByDate: parsed.nutrition?.mealsByDate ?? {},
+      },
     };
   } catch {
     return null;
@@ -238,6 +302,11 @@ type StoreValue = {
   setNonNegotiable: (value: string) => void;
   patchBook: (patch: Partial<BookState>) => void;
   addMark: (mark: Omit<AttentionMark, "id" | "at">) => void;
+  patchNutrition: (patch: Partial<NutritionState>) => void;
+  chooseMeal: (slot: MealSlot, optionId: string, date?: string) => void;
+  toggleMealEaten: (slot: MealSlot, date?: string) => void;
+  addWeighIn: (weightLb: number, date?: string) => void;
+  todayMeals: DayMeals;
   reset: () => void;
 };
 
@@ -346,6 +415,30 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       mark: { ...mark, id: crypto.randomUUID(), at: new Date().toISOString() },
     });
   }, []);
+  const patchNutrition = useCallback((patch: Partial<NutritionState>) => {
+    dispatch({ type: "PATCH_NUTRITION", patch });
+  }, []);
+  const chooseMeal = useCallback(
+    (slot: MealSlot, optionId: string, date?: string) => {
+      dispatch({ type: "CHOOSE_MEAL", date: date ?? today, slot, optionId });
+    },
+    [today],
+  );
+  const toggleMealEaten = useCallback(
+    (slot: MealSlot, date?: string) => {
+      dispatch({ type: "TOGGLE_MEAL_EATEN", date: date ?? today, slot });
+    },
+    [today],
+  );
+  const addWeighIn = useCallback(
+    (weightLb: number, date?: string) => {
+      dispatch({
+        type: "ADD_WEIGH_IN",
+        weighIn: { date: date ?? today, weightLb },
+      });
+    },
+    [today],
+  );
   const reset = useCallback(() => {
     window.localStorage.removeItem(STORAGE_KEY);
     dispatch({ type: "RESET" });
@@ -370,6 +463,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       setNonNegotiable,
       patchBook,
       addMark,
+      patchNutrition,
+      chooseMeal,
+      toggleMealEaten,
+      addWeighIn,
+      todayMeals: state.nutrition.mealsByDate[today] ?? emptyDayMeals(),
       reset,
     }),
     [
@@ -388,6 +486,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       setNonNegotiable,
       patchBook,
       addMark,
+      patchNutrition,
+      chooseMeal,
+      toggleMealEaten,
+      addWeighIn,
       reset,
     ],
   );
