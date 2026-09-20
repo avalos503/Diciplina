@@ -8,9 +8,9 @@ Los deploys **anónimos de Vercel** (`temporary-*.vercel.app`) suelen devolver H
 
 **Abre esta URL ahora (estática, sin muro de Vercel):**
 
-**https://solve-animated-moves-kingdom.trycloudflare.com**
+**https://except-accepted-mag-newspaper.trycloudflare.com**
 
-Es el build actual (Nutrición, Rutinas, Mentalidad, Lectura). Verificado con User-Agent de Chrome Android: HTTP 200, HTML de Diciplina, sin interstitial de bloqueo. Vive mientras este entorno siga arriba; para que no se caiga, reclama Vercel (abajo).
+Es el build actual (Nutrición, Rutinas, Mentalidad, Lectura). Verificado con User-Agent de Chrome Android: HTTP 200, HTML de Diciplina, sin “blocked” / password / Error 1033. El túnel anterior (`solve-animated-moves-kingdom`) murió con 1033; este es uno nuevo por HTTP/2. Vive mientras este entorno siga arriba; para que no se caiga, reclama Vercel (abajo).
 
 ### Dejarla permanente (recomendado, ~2 min)
 
