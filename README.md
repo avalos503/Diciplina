@@ -8,9 +8,15 @@ Los deploys **anónimos de Vercel** (`temporary-*.vercel.app`) suelen devolver H
 
 **Abre esta URL ahora (estática, sin muro de Vercel):**
 
-**https://except-accepted-mag-newspaper.trycloudflare.com**
+**https://stay-communications-plastic-bedding.trycloudflare.com**
 
-Es el build actual (Nutrición, Rutinas, Mentalidad, Lectura). Verificado con User-Agent de Chrome Android: HTTP 200, HTML de Diciplina, sin “blocked” / password / Error 1033. El túnel anterior (`solve-animated-moves-kingdom`) murió con 1033; este es uno nuevo por HTTP/2. Vive mientras este entorno siga arriba; para que no se caiga, reclama Vercel (abajo).
+Es el build actual (Nutrición, Rutinas, Mentalidad, Lectura). Verificado con User-Agent de Chrome Android: HTTP 200, HTML de Diciplina, sin “blocked” / password / Error 1033. Los túneles anteriores (`solve-animated-moves-kingdom`, `except-accepted-mag-newspaper`) ya no sirven; este es uno nuevo por HTTP/2. Vive mientras este entorno siga arriba.
+
+Claim fresco del último build (si el código viejo caducó):
+
+**https://vercel.com/claim-deployment?code=271010af-492f-4c2d-9a37-1a28095a72d0**
+
+(Deploy anónimo: `https://temporary-racing-ochre-xapsur7.vercel.app` — no lo abras en el teléfono hasta apagar Deployment Protection.)
 
 ### Dejarla permanente (recomendado, ~2 min)
 
