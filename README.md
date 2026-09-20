@@ -4,11 +4,17 @@ App web móvil para construir disciplina: **retos diarios**, **hábitos**, **rut
 
 ## Abrir en el teléfono (URL pública)
 
-**Abre esta URL ahora:**
+**Abre esta URL ahora (build actual, con Nutrición):**
 
-**https://temporary-zippy-pearl-rj2oo6z.vercel.app**
+**https://temporary-nimble-flurry-5q52yme.vercel.app**
 
-Es un deploy anónimo en Vercel. Puede haber caducado. Para un sitio permanente, clona la rama de la app (`main` todavía no la tiene):
+Es un deploy anónimo en Vercel. Caduca en ~60 minutos salvo que lo reclames (cuenta gratis, ~1 minuto):
+
+**https://vercel.com/claim-deployment?code=b0b641cf-a97d-42d2-9022-0f2a67b65a0e**
+
+No uses el atajo PWA del URL viejo (`temporary-zippy-pearl-rj2oo6z`); abre este enlace en el navegador y, si quieres, vuelve a “Añadir a pantalla de inicio”.
+
+Sitio permanente desde esta rama (`main` todavía no tiene la app):
 
 [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https://github.com/avalos503/Diciplina/tree/cursor/diciplina-web-app-9402&project-name=diciplina)
 
