@@ -4,19 +4,29 @@ App web móvil para construir disciplina: **retos diarios**, **hábitos**, **rut
 
 ## Abrir en el teléfono (URL pública)
 
-**Abre esta URL ahora (build actual, con Nutrición):**
+Los deploys **anónimos de Vercel** (`temporary-*.vercel.app`) suelen devolver HTTP 200 a servidores y **bloquear Chrome del teléfono** con “This request was blocked” (Deployment Protection / Attack Challenge / WAF de bots). No uses esa URL en el móvil.
 
-**https://temporary-nimble-flurry-5q52yme.vercel.app**
+**Abre esta URL ahora (estática, sin muro de Vercel):**
 
-Es un deploy anónimo en Vercel. Caduca en ~60 minutos salvo que lo reclames (cuenta gratis, ~1 minuto):
+**https://solve-animated-moves-kingdom.trycloudflare.com**
 
-**https://vercel.com/claim-deployment?code=b0b641cf-a97d-42d2-9022-0f2a67b65a0e**
+Es el build actual (Nutrición, Rutinas, Mentalidad, Lectura). Verificado con User-Agent de Chrome Android: HTTP 200, HTML de Diciplina, sin interstitial de bloqueo. Vive mientras este entorno siga arriba; para que no se caiga, reclama Vercel (abajo).
 
-No uses el atajo PWA del URL viejo (`temporary-zippy-pearl-rj2oo6z`); abre este enlace en el navegador y, si quieres, vuelve a “Añadir a pantalla de inicio”.
+### Dejarla permanente (recomendado, ~2 min)
+
+1. Reclama el deploy de Vercel (cuenta gratis):  
+   **https://vercel.com/claim-deployment?code=b0b641cf-a97d-42d2-9022-0f2a67b65a0e**
+2. En el proyecto: **Settings → Deployment Protection** → apaga **Vercel Authentication** / Standard Protection.
+3. **Firewall / Attack Challenge Mode** → Off.
+4. Entonces `https://temporary-nimble-flurry-5q52yme.vercel.app` (o el dominio del proyecto) deja de bloquear el teléfono.
+
+Reclamar **sí** debería arreglar el bloqueo, **si** después apagas esa protección. El claim solo, con Challenge Mode aún on, puede seguir cortando móviles.
 
 Sitio permanente desde esta rama (`main` todavía no tiene la app):
 
 [Deploy with Vercel](https://vercel.com/new/clone?repository-url=https://github.com/avalos503/Diciplina/tree/cursor/diciplina-web-app-9402&project-name=diciplina)
+
+En el proyecto clonado, desactiva Deployment Protection igual. Borra el icono PWA viejo y vuelve a “Añadir a pantalla de inicio”.
 
 ### GitHub Pages
 
